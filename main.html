@@ -1,0 +1,1393 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kinyl — AI Chief of Staff for Small Business</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@600;700&family=Playfair+Display:ital,wght@0,400;0,500;0,700;1,400;1,500&family=DM+Sans:wght@300;400;500&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --cream: #FAF8F3;
+    --cream-dark: #F2EFE6;
+    --parchment: #EDE8DC;
+    --ink: #1A1814;
+    --ink-soft: #3D3A34;
+    --ink-muted: #7A7567;
+    --accent: #C4773B;
+    --accent-light: #E8C4A0;
+    --accent-pale: #F7EDE0;
+    --teal: #2E6B6B;
+    --teal-light: #D4EAEA;
+    --red-soft: #C45050;
+    --green-soft: #4A7A5A;
+    --green-pale: #D8EBE0;
+    --serif: 'Playfair Display', Georgia, serif;
+    --sans: 'DM Sans', sans-serif;
+    --mono: 'DM Mono', monospace;
+    --shadow-sm: 0 1px 3px rgba(26,24,20,0.06), 0 1px 2px rgba(26,24,20,0.04);
+    --shadow-md: 0 4px 16px rgba(26,24,20,0.08), 0 2px 6px rgba(26,24,20,0.05);
+    --shadow-lg: 0 12px 40px rgba(26,24,20,0.12), 0 4px 12px rgba(26,24,20,0.06);
+    --radius: 12px;
+    --radius-sm: 6px;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--cream);
+    color: var(--ink);
+    font-family: var(--sans);
+    font-size: 15px;
+    line-height: 1.6;
+    min-height: 100vh;
+  }
+
+  /* ── NOISE TEXTURE OVERLAY ── */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 9999;
+    opacity: 0.025;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    background-size: 180px;
+  }
+
+  /* ── HEADER ── */
+  header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 6px 40px;
+    border-bottom: 1px solid var(--parchment);
+    background: rgba(250, 248, 243, 0.88);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    backdrop-filter: blur(12px);
+  }
+
+  .logo {
+    display: flex;
+    align-items: center;
+    gap: -15px;
+  }
+
+  .logo-img {
+    width: 70px;
+    height:70px;
+    object-fit: contain;
+  }
+
+  .logo-img-footer {
+    filter: invert(1) brightness(2);
+  }
+
+  .logo-name {
+    font-family: 'Syne', sans-serif;
+    font-size: 19px;
+    font-weight: 700;
+    letter-spacing: -0.4px;
+    color: var(--ink);
+    margin-left: -15px;
+  }
+
+  .logo-name span { color: var(--accent); font-style: italic; }
+
+  nav { display: flex; gap: 28px; align-items: center; }
+
+  nav a {
+    font-size: 13.5px;
+    font-weight: 400;
+    color: var(--ink-muted);
+    text-decoration: none;
+    letter-spacing: 0.2px;
+    transition: color 0.2s;
+  }
+
+  nav a:hover { color: var(--ink); }
+
+  .btn-primary {
+    background: var(--ink);
+    color: var(--cream);
+    padding: 9px 20px;
+    border-radius: var(--radius-sm);
+    font-size: 13.5px;
+    font-weight: 500;
+    text-decoration: none;
+    letter-spacing: 0.2px;
+    transition: background 0.2s, transform 0.15s;
+    cursor: pointer;
+    border: none;
+    font-family: var(--sans);
+  }
+
+  .btn-primary:hover { background: var(--ink-soft); transform: translateY(-1px); }
+
+  /* ── HERO ── */
+  .hero {
+    padding: 80px 40px 60px;
+    max-width: 1100px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 60px;
+    align-items: start;
+  }
+
+  .hero-eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: var(--accent-pale);
+    color: var(--accent);
+    font-size: 11.5px;
+    font-weight: 500;
+    letter-spacing: 0.8px;
+    text-transform: uppercase;
+    padding: 5px 12px;
+    border-radius: 999px;
+    margin-bottom: 20px;
+  }
+
+  .hero-eyebrow::before {
+    content: '';
+    width: 6px; height: 6px;
+    background: var(--accent);
+    border-radius: 50%;
+    animation: pulse 2s ease-in-out infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.5; transform: scale(0.8); }
+  }
+
+  .hero h1 {
+    font-family: var(--serif);
+    font-size: 52px;
+    font-weight: 500;
+    line-height: 1.12;
+    letter-spacing: -1.5px;
+    color: var(--ink);
+    margin-bottom: 22px;
+  }
+
+  .hero h1 em {
+    font-style: italic;
+    color: var(--accent);
+  }
+
+  .hero-sub {
+    font-size: 16px;
+    color: var(--ink-soft);
+    line-height: 1.7;
+    max-width: 420px;
+    margin-bottom: 36px;
+    font-weight: 300;
+  }
+
+  .hero-actions { display: flex; gap: 14px; align-items: center; }
+
+  .btn-outline {
+    border: 1.5px solid var(--parchment);
+    color: var(--ink-soft);
+    background: transparent;
+    padding: 9px 20px;
+    border-radius: var(--radius-sm);
+    font-size: 13.5px;
+    font-weight: 400;
+    text-decoration: none;
+    transition: border-color 0.2s, color 0.2s;
+    cursor: pointer;
+    font-family: var(--sans);
+  }
+
+  .btn-outline:hover { border-color: var(--ink-muted); color: var(--ink); }
+
+  .hero-trust {
+    margin-top: 40px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 12.5px;
+    color: var(--ink-muted);
+  }
+
+  .trust-avatars { display: flex; }
+
+  .trust-avatars span {
+    width: 28px; height: 28px;
+    border-radius: 50%;
+    border: 2px solid var(--cream);
+    margin-left: -8px;
+    font-size: 11px;
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 500;
+  }
+
+  .trust-avatars span:first-child { margin-left: 0; }
+
+  /* ── LIVE DASHBOARD (right side of hero) ── */
+  .dashboard-preview {
+    background: #fff;
+    border: 1px solid var(--parchment);
+    border-radius: 16px;
+    box-shadow: var(--shadow-lg);
+    overflow: hidden;
+    animation: floatCard 6s ease-in-out infinite;
+  }
+
+  @keyframes floatCard {
+    0%, 100% { transform: translateY(0px); }
+    50% { transform: translateY(-6px); }
+  }
+
+  .dash-topbar {
+    background: var(--cream-dark);
+    padding: 12px 18px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 1px solid var(--parchment);
+  }
+
+  .dash-dots { display: flex; gap: 6px; }
+  .dash-dots span { width: 10px; height: 10px; border-radius: 50%; }
+  .dash-dots span:nth-child(1) { background: #FFB3B3; }
+  .dash-dots span:nth-child(2) { background: #FFD9A0; }
+  .dash-dots span:nth-child(3) { background: #B3DDB3; }
+
+  .dash-title-bar {
+    font-size: 12px;
+    color: var(--ink-muted);
+    font-family: var(--mono);
+  }
+
+  .dash-body { padding: 18px; }
+
+  .dash-greeting {
+    font-family: var(--serif);
+    font-size: 15px;
+    font-weight: 500;
+    color: var(--ink);
+    margin-bottom: 14px;
+  }
+
+  .dash-greeting span { color: var(--accent); font-style: italic; }
+
+  /* Alert cards */
+  .alert-list { display: flex; flex-direction: column; gap: 8px; margin-bottom: 14px; }
+
+  .alert-card {
+    border-radius: 8px;
+    padding: 10px 14px;
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    font-size: 12.5px;
+    animation: slideIn 0.4s ease forwards;
+    opacity: 0;
+  }
+
+  .alert-card:nth-child(1) { animation-delay: 0.1s; }
+  .alert-card:nth-child(2) { animation-delay: 0.3s; }
+  .alert-card:nth-child(3) { animation-delay: 0.5s; }
+
+  @keyframes slideIn {
+    from { opacity: 0; transform: translateX(-8px); }
+    to { opacity: 1; transform: translateX(0); }
+  }
+
+  .alert-card.warn { background: #FFF7ED; border: 1px solid #FFD9A0; }
+  .alert-card.ok { background: var(--green-pale); border: 1px solid #B3D9C0; }
+  .alert-card.info { background: var(--teal-light); border: 1px solid #A0CCCC; }
+
+  .alert-icon { font-size: 14px; flex-shrink: 0; margin-top: 1px; }
+
+  .alert-content .alert-title {
+    font-weight: 500;
+    color: var(--ink);
+    margin-bottom: 2px;
+    line-height: 1.3;
+  }
+
+  .alert-content .alert-body {
+    color: var(--ink-muted);
+    font-size: 11.5px;
+    line-height: 1.4;
+  }
+
+  /* Stats row */
+  .stats-row {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+    margin-bottom: 14px;
+  }
+
+  .stat-box {
+    background: var(--cream);
+    border: 1px solid var(--parchment);
+    border-radius: 8px;
+    padding: 10px 12px;
+    text-align: center;
+  }
+
+  .stat-val {
+    font-family: var(--serif);
+    font-size: 20px;
+    font-weight: 500;
+    color: var(--ink);
+    line-height: 1.1;
+  }
+
+  .stat-val.green { color: var(--green-soft); }
+  .stat-val.orange { color: var(--accent); }
+
+  .stat-label {
+    font-size: 10px;
+    color: var(--ink-muted);
+    letter-spacing: 0.3px;
+    margin-top: 3px;
+  }
+
+  /* Actions pending */
+  .actions-label {
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.6px;
+    text-transform: uppercase;
+    color: var(--ink-muted);
+    margin-bottom: 8px;
+  }
+
+  .action-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 10px;
+    border-radius: 6px;
+    margin-bottom: 5px;
+    cursor: pointer;
+    transition: background 0.15s;
+    font-size: 12.5px;
+  }
+
+  .action-item:hover { background: var(--cream-dark); }
+
+  .action-chip {
+    font-size: 10.5px;
+    font-weight: 500;
+    padding: 2px 8px;
+    border-radius: 999px;
+    flex-shrink: 0;
+  }
+
+  .action-chip.approve { background: var(--green-pale); color: var(--green-soft); }
+  .action-chip.review { background: var(--accent-pale); color: var(--accent); }
+
+  .action-text { color: var(--ink-soft); flex: 1; line-height: 1.3; }
+
+  .action-arrow { color: var(--ink-muted); font-size: 11px; }
+
+  /* ── SECTION COMMON ── */
+  section { padding: 80px 40px; }
+
+  .section-inner { max-width: 1100px; margin: 0 auto; }
+
+  .section-label {
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 12px;
+  }
+
+  .section-title {
+    font-family: var(--serif);
+    font-size: 38px;
+    font-weight: 500;
+    letter-spacing: -1px;
+    line-height: 1.18;
+    color: var(--ink);
+    margin-bottom: 16px;
+  }
+
+  .section-title em { font-style: italic; color: var(--accent); }
+
+  .section-body {
+    font-size: 15.5px;
+    color: var(--ink-soft);
+    line-height: 1.75;
+    max-width: 560px;
+    font-weight: 300;
+  }
+
+  /* ── FEATURES ── */
+  .features-section { background: var(--cream-dark); }
+
+  .features-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: -10px;
+    margin-top: 52px;
+    border: 2px solid var(--parchment);
+    border-radius: 16px;
+    overflow: hidden;
+  }
+
+  .feature-card {
+    background: #fff;
+    padding: 32px 28px;
+    transition: background 0.2s;
+    position: relative;
+  }
+
+  .feature-card:hover { background: var(--cream); }
+
+  .feature-card::after {
+    content: '';
+    position: absolute;
+    bottom: 0; left: 28px; right: 28px;
+    height: 1px;
+    background: var(--parchment);
+  }
+
+  .feature-card:nth-child(n+4)::after { display: none; }
+
+  .feature-icon {
+    width: 40px; height: 40px;
+    border-radius: 10px;
+    background: var(--accent-pale);
+    display: flex; align-items: center; justify-content: center;
+    color: var(--accent);
+    margin-bottom: 16px;
+  }
+
+  .feature-title {
+    font-family: var(--serif);
+    font-size: 17px;
+    font-weight: 500;
+    color: var(--ink);
+    margin-bottom: 8px;
+    letter-spacing: -0.2px;
+  }
+
+  .feature-desc {
+    font-size: 13.5px;
+    color: var(--ink-muted);
+    line-height: 1.65;
+  }
+
+  /* ── HOW IT WORKS ── */
+  .how-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 80px;
+    align-items: center;
+    margin-top: 52px;
+  }
+
+  .steps { display: flex; flex-direction: column; gap: 0; }
+
+  .step {
+    display: flex;
+    gap: 20px;
+    padding: 24px 0;
+    border-bottom: 1px solid var(--parchment);
+    cursor: pointer;
+    transition: padding-left 0.2s;
+  }
+
+  .step:last-child { border-bottom: none; }
+  .step:hover { padding-left: 6px; }
+
+  .step-num {
+    font-family: var(--serif);
+    font-size: 28px;
+    font-weight: 400;
+    color: var(--accent-light);
+    width: 40px;
+    flex-shrink: 0;
+    line-height: 1;
+    padding-top: 2px;
+  }
+
+
+  .step-title {
+    font-family: var(--serif);
+    font-size: 17px;
+    font-weight: 500;
+    color: var(--ink);
+    margin-bottom: 6px;
+  }
+
+  .step-desc {
+    font-size: 13.5px;
+    color: var(--ink-muted);
+    line-height: 1.6;
+  }
+
+  /* Timeline visual */
+  .timeline-card {
+    background: #fff;
+    border: 1px solid var(--parchment);
+    border-radius: 16px;
+    padding: 24px;
+    box-shadow: var(--shadow-md);
+  }
+
+  .timeline-header {
+    font-family: var(--serif);
+    font-size: 14px;
+    color: var(--ink-muted);
+    margin-bottom: 20px;
+    font-style: italic;
+  }
+
+  .tl-item {
+    display: flex;
+    gap: 14px;
+    margin-bottom: 16px;
+    align-items: flex-start;
+  }
+
+  .tl-time {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--ink-muted);
+    width: 52px;
+    flex-shrink: 0;
+    padding-top: 2px;
+  }
+
+  .tl-dot-col {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0;
+    flex-shrink: 0;
+  }
+
+  .tl-dot {
+    width: 10px; height: 10px;
+    border-radius: 50%;
+    border: 2px solid var(--parchment);
+    background: #fff;
+    flex-shrink: 0;
+    margin-top: 3px;
+  }
+
+  .tl-dot.active { background: var(--accent); border-color: var(--accent); }
+  .tl-dot.done { background: var(--green-soft); border-color: var(--green-soft); }
+
+  .tl-line {
+    width: 1px;
+    flex: 1;
+    background: var(--parchment);
+    margin-top: 2px;
+    min-height: 24px;
+  }
+
+
+  .tl-title {
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--ink);
+    margin-bottom: 2px;
+  }
+
+  .tl-sub { font-size: 12px; color: var(--ink-muted); }
+
+  .tl-badge {
+    display: inline-block;
+    font-size: 10px;
+    font-weight: 500;
+    padding: 2px 8px;
+    border-radius: 999px;
+    margin-top: 4px;
+  }
+
+  .tl-badge.saved { background: var(--green-pale); color: var(--green-soft); }
+  .tl-badge.sent { background: var(--teal-light); color: var(--teal); }
+  .tl-badge.booked { background: var(--accent-pale); color: var(--accent); }
+
+  /* ── PRICING ── */
+  .pricing-section { background: var(--cream-dark); }
+
+  .pricing-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+    margin-top: 52px;
+  }
+
+  .pricing-card {
+    background: #fff;
+    border: 1.5px solid var(--parchment);
+    border-radius: 16px;
+    padding: 32px 28px;
+    transition: box-shadow 0.2s, transform 0.2s;
+    position: relative;
+  }
+
+  .pricing-card:hover { box-shadow: var(--shadow-md); transform: translateY(-3px); }
+
+  .pricing-card.featured {
+    border-color: var(--ink);
+    box-shadow: var(--shadow-lg);
+  }
+
+  .pricing-badge {
+    position: absolute;
+    top: -12px; left: 50%;
+    transform: translateX(-50%);
+    background: var(--ink);
+    color: var(--cream);
+    font-size: 10.5px;
+    font-weight: 500;
+    letter-spacing: 0.5px;
+    padding: 3px 14px;
+    border-radius: 999px;
+  }
+
+  .pricing-tier {
+    font-size: 11.5px;
+    font-weight: 500;
+    letter-spacing: 0.8px;
+    text-transform: uppercase;
+    color: var(--ink-muted);
+    margin-bottom: 12px;
+  }
+
+  .pricing-price {
+    font-family: var(--serif);
+    font-size: 42px;
+    font-weight: 500;
+    color: var(--ink);
+    line-height: 1;
+    margin-bottom: 4px;
+  }
+
+  .pricing-price span { font-size: 20px; font-weight: 400; color: var(--ink-muted); }
+
+  .pricing-cycle {
+    font-size: 12.5px;
+    color: var(--ink-muted);
+    margin-bottom: 24px;
+  }
+
+  .pricing-features { list-style: none; margin-bottom: 28px; }
+
+  .pricing-features li {
+    font-size: 13.5px;
+    color: var(--ink-soft);
+    padding: 6px 0;
+    border-bottom: 1px solid var(--cream-dark);
+    display: flex;
+    gap: 8px;
+    align-items: center;
+  }
+
+  .pricing-features li::before {
+    content: '';
+    display: inline-block;
+    width: 14px;
+    height: 14px;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%234A7A5A' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='20 6 9 17 4 12'/%3E%3C/svg%3E");
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    flex-shrink: 0;
+  }
+
+  .btn-tier {
+    width: 100%;
+    padding: 11px;
+    border-radius: var(--radius-sm);
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-family: var(--sans);
+    text-align: center;
+    text-decoration: none;
+    display: block;
+    border: none;
+  }
+
+  .btn-tier-outline {
+    background: transparent;
+    border: 1.5px solid var(--parchment);
+    color: var(--ink);
+  }
+
+  .btn-tier-outline:hover { border-color: var(--ink); }
+
+  .btn-tier-solid {
+    background: var(--ink);
+    color: var(--cream);
+  }
+
+  .btn-tier-solid:hover { background: var(--ink-soft); }
+
+  /* ── TESTIMONIALS ── */
+  .testimonials-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+    margin-top: 52px;
+  }
+
+  .testimonial-card {
+    background: #fff;
+    border: 1px solid var(--parchment);
+    border-radius: 14px;
+    padding: 28px;
+    transition: box-shadow 0.2s;
+  }
+
+  .testimonial-card:hover { box-shadow: var(--shadow-md); }
+
+  .t-quote {
+    font-family: var(--serif);
+    font-size: 15px;
+    line-height: 1.65;
+    color: var(--ink-soft);
+    margin-bottom: 20px;
+    font-style: italic;
+  }
+
+  .t-quote::before { content: '"'; color: var(--accent-light); font-size: 28px; line-height: 0; vertical-align: -8px; margin-right: 2px; }
+  .t-quote::after { content: '"'; color: var(--accent-light); font-size: 28px; line-height: 0; vertical-align: -8px; margin-left: 2px; }
+
+  .t-author {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .t-avatar {
+    width: 36px; height: 36px;
+    border-radius: 50%;
+    font-size: 14px;
+    font-weight: 600;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+  }
+
+  .t-name {
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--ink);
+  }
+
+  .t-biz {
+    font-size: 11.5px;
+    color: var(--ink-muted);
+  }
+
+  /* ── FOOTER ── */
+  footer {
+    background: var(--ink);
+    color: var(--cream);
+    padding: 60px 40px 32px;
+  }
+
+  .footer-inner {
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+
+  .footer-top {
+    display: grid;
+    grid-template-columns: 1.5fr 1fr 1fr 1fr;
+    gap: 48px;
+    margin-bottom: 48px;
+  }
+
+  .footer-brand .logo-name { color: var(--cream); }
+
+  .footer-tagline {
+    font-size: 13px;
+    color: rgba(250,248,243,0.5);
+    margin-top: 14px;
+    line-height: 1.7;
+    max-width: 240px;
+  }
+
+  .footer-col-title {
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.8px;
+    text-transform: uppercase;
+    color: rgba(250,248,243,0.4);
+    margin-bottom: 16px;
+  }
+
+  .footer-links { list-style: none; display: flex; flex-direction: column; gap: 10px; }
+
+  .footer-links a {
+    font-size: 13.5px;
+    color: rgba(250,248,243,0.65);
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+
+  .footer-links a:hover { color: var(--cream); }
+
+  .footer-bottom {
+    border-top: 1px solid rgba(250,248,243,0.1);
+    padding-top: 24px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .footer-copy {
+    font-size: 12.5px;
+    color: rgba(250,248,243,0.35);
+  }
+
+  .footer-copy span { color: rgba(250,248,243,0.55); }
+
+  /* ── DIVIDER ── */
+  .divider {
+    height: 1px;
+    background: var(--parchment);
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+
+  /* ── EARLY ACCESS ── */
+  .early-access-section {
+    background: var(--ink);
+    padding: 96px 40px;
+    text-align: center;
+  }
+
+  .ea-inner {
+    max-width: 440px;
+    margin: 0 auto;
+  }
+
+  .ea-title {
+    font-family: var(--serif);
+    font-size: 36px;
+    font-weight: 500;
+    color: var(--cream);
+    letter-spacing: -0.8px;
+    margin-bottom: 10px;
+  }
+
+  .ea-sub {
+    font-size: 14px;
+    color: rgba(250,248,243,0.45);
+    margin-bottom: 32px;
+  }
+
+  .ea-form {
+    display: flex;
+    gap: 0;
+    border: 1px solid rgba(250,248,243,0.15);
+    border-radius: var(--radius-sm);
+    overflow: hidden;
+  }
+
+  .ea-form input {
+    flex: 1;
+    padding: 13px 18px;
+    background: rgba(250,248,243,0.06);
+    border: none;
+    color: var(--cream);
+    font-family: var(--sans);
+    font-size: 14px;
+    outline: none;
+  }
+
+  .ea-form input::placeholder { color: rgba(250,248,243,0.28); }
+
+  .ea-submit {
+    padding: 13px 22px;
+    background: var(--accent);
+    color: var(--cream);
+    border: none;
+    font-family: var(--sans);
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: background 0.2s;
+  }
+
+  .ea-submit:hover { background: #b5692f; }
+
+  .ea-confirmation {
+    display: none;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    font-size: 13.5px;
+    color: rgba(250,248,243,0.55);
+    margin-top: 16px;
+  }
+
+  .ea-confirmation.visible { display: flex; }
+
+  /* ── RESPONSIVE tweaks ── */
+  @media (max-width: 860px) {
+    .hero { grid-template-columns: 1fr; }
+    .features-grid { grid-template-columns: 1fr; }
+    .how-grid { grid-template-columns: 1fr; }
+    .pricing-grid { grid-template-columns: 1fr; }
+    .testimonials-grid { grid-template-columns: 1fr; }
+    .footer-top { grid-template-columns: 1fr 1fr; }
+    .hero h1 { font-size: 38px; }
+    .early-access-section { padding: 72px 24px; }
+    .ea-form { flex-direction: column; border: none; gap: 10px; }
+    .ea-form input { border: 1px solid rgba(250,248,243,0.15); border-radius: var(--radius-sm); background: rgba(250,248,243,0.06); }
+    .ea-submit { border-radius: var(--radius-sm); }
+  }
+</style>
+</head>
+<body>
+
+<!-- ── HEADER ── -->
+<header>
+  <div class="logo">
+    <img src="logo.png" alt="Kinyl" class="logo-img" />
+    <span class="logo-name">Kinyl</span>
+  </div>
+  <nav>
+    <a href="#features">Features</a>
+    <a href="#how-it-works">How it works</a>
+    <a href="#pricing">Pricing</a>
+    <a href="#stories">Stories</a>
+    <a href="#early-access" class="btn-primary">Get early access</a>
+  </nav>
+</header>
+<main>
+
+<!-- ── HERO ── -->
+<section style="padding: 0; background: var(--cream);">
+  <div class="hero">
+    <div>
+      <div class="hero-eyebrow">Now in early access</div>
+      <h1>Your business,<br>running <em>itself</em><br>while you sleep.</h1>
+      <p class="hero-sub">Kinyl is a zero-prompt AI chief of staff for small business owners. It watches your operations, surfaces problems before they become crises, and handles routine communications without you ever typing a word.</p>
+      <div class="hero-actions">
+        <a href="#early-access" class="btn-primary">Get early access
+        </button>
+        <a href="#how-it-works" class="btn-outline">Watch 2-min demo <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-left:4px"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></a>
+      </div>
+      <div class="hero-trust">
+        <div class="trust-avatars">
+          <span style="background:#F7EDE0;color:#C4773B">M</span>
+          <span style="background:#D4EAEA;color:#2E6B6B">J</span>
+          <span style="background:#D8EBE0;color:#4A7A5A">R</span>
+          <span style="background:#EDE8DC;color:#7A7567">+</span>
+        </div>
+        <span>Trusted by <strong>50+</strong> small business owners</span>
+      </div>
+    </div>
+
+    <!-- LIVE DASHBOARD PREVIEW -->
+    <div class="dashboard-preview">
+      <div class="dash-topbar">
+        <div class="dash-dots"><span></span><span></span><span></span></div>
+        <div class="dash-title-bar">Kinyl.dashboard · live</div>
+        <div></div>
+      </div>
+      <div class="dash-body">
+        <div class="dash-greeting">Good morning, <span>Marco.</span> Kinyl's been busy.</div>
+
+        <div class="alert-list">
+          <div class="alert-card warn">
+            <div class="alert-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#C4773B" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg></div>
+            <div class="alert-content">
+              <div class="alert-title">Supplier price increase detected</div>
+              <div class="alert-body">FreshCo raised produce prices 14%. Found 2 cheaper alternatives. Draft comparison ready.</div>
+            </div>
+          </div>
+          <div class="alert-card ok">
+            <div class="alert-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#4A7A5A" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div>
+            <div class="alert-content">
+              <div class="alert-title">Overdue invoice sent</div>
+              <div class="alert-body">Reminder sent to Carla's Events — $1,240 outstanding 38 days.</div>
+            </div>
+          </div>
+          <div class="alert-card info">
+            <div class="alert-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#2E6B6B" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg></div>
+            <div class="alert-content">
+              <div class="alert-title">Friday forecast: 3 likely no-shows</div>
+              <div class="alert-body">Rain expected + historical pattern. Added 1 waitlist reservation for safety.</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="stats-row">
+          <div class="stat-box">
+            <div class="stat-val green">$2.1k</div>
+            <div class="stat-label">Saved this week</div>
+          </div>
+          <div class="stat-box">
+            <div class="stat-val orange">7</div>
+            <div class="stat-label">Actions handled</div>
+          </div>
+          <div class="stat-box">
+            <div class="stat-val">94%</div>
+            <div class="stat-label">On-time payments</div>
+          </div>
+        </div>
+
+        <div class="actions-label">Needs your approval</div>
+
+        <div class="action-item">
+          <div class="action-chip review">Review</div>
+          <div class="action-text">Vendor contract renewal — Metro Linens</div>
+          <div class="action-arrow">›</div>
+        </div>
+        <div class="action-item">
+          <div class="action-chip approve">Approve</div>
+          <div class="action-text">New hire onboarding email to Sofia R.</div>
+          <div class="action-arrow">›</div>
+        </div>
+        <div class="action-item">
+          <div class="action-chip review">Review</div>
+          <div class="action-text">Monthly tax estimate — file by Apr 15</div>
+          <div class="action-arrow">›</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ── FEATURES ── -->
+<section class="features-section" id="features">
+  <div class="section-inner">
+    <div class="section-label">What Kinyl does</div>
+    <div class="section-title">Six things a $300k/yr<br><em>ops director</em> would handle</div>
+    <p class="section-body">Kinyl combines all seven of ARK Invest's "Big Ideas 2026" into one product built specifically for the 500 million small businesses traditional software has ignored.</p>
+
+    <div class="features-grid">
+      <div class="feature-card">
+        <div class="feature-icon"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7z"/><circle cx="12" cy="12" r="3"/></svg></div>
+        <div class="feature-title">Always-on observation</div>
+        <div class="feature-desc">Reads your emails, invoices, calendars, and sales data continuously. You never have to tell it what to watch — it already knows.</div>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg></div>
+        <div class="feature-title">Voice-first communication</div>
+        <div class="feature-desc">Talks to vendors, clients, and staff by phone or message on your behalf. Manages full relationship cycles end to end.</div>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg></div>
+        <div class="feature-title">Proactive interventions</div>
+        <div class="feature-desc">Surfaces actions before problems happen — not after. Overdue invoices, price changes, scheduling risks, contract renewals.</div>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg></div>
+        <div class="feature-title">Continuous business health</div>
+        <div class="feature-desc">Monitors your business vitals the way a health tracker monitors your body. Cash flow, churn, margins, and team signals — always live.</div>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg></div>
+        <div class="feature-title">Hyper-personalized to you</div>
+        <div class="feature-desc">Learns your tone, your preferences, your risk tolerance. Adapts its style to match yours — formal, casual, cautious, or bold.</div>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"/><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"/></svg></div>
+        <div class="feature-title">Messy data, no problem</div>
+        <div class="feature-desc">Reads handwritten notes, scanned receipts, WhatsApp threads, and PDFs. Turns chaos into structured intelligence automatically.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── HOW IT WORKS ── -->
+<section id="how-it-works">
+  <div class="section-inner">
+    <div class="how-grid">
+      <div>
+        <div class="section-label">How it works</div>
+        <div class="section-title">Set up in 10 minutes.<br>Never <em>prompt</em> again.</div>
+        <p class="section-body" style="margin-bottom: 0;">Aria is not a chatbot. It's an agent that runs in the background — watching, acting, and reporting back.</p>
+
+        <div class="steps" style="margin-top: 36px;">
+          <div class="step">
+            <div class="step-num">01</div>
+            <div class="step-content">
+              <div class="step-title">Connect your tools</div>
+              <div class="step-desc">Link your email, calendar, accounting software, and messaging apps. Takes about 10 minutes.</div>
+            </div>
+          </div>
+          <div class="step">
+            <div class="step-num">02</div>
+            <div class="step-content">
+              <div class="step-title">Kinyl learns your business</div>
+              <div class="step-desc">Over 48 hours, Aria reads your history and builds a model of your operations, relationships, and preferences.</div>
+            </div>
+          </div>
+          <div class="step">
+            <div class="step-num">03</div>
+            <div class="step-content">
+              <div class="step-title">It runs. You review.</div>
+              <div class="step-desc">Each morning, a briefing of what happened overnight and what needs your approval today. Nothing more.</div>
+            </div>
+          </div>
+          <div class="step">
+            <div class="step-num">04</div>
+            <div class="step-content">
+              <div class="step-title">Gets smarter over time</div>
+              <div class="step-desc">Every approval or correction teaches Kinyl your preferences. After 30 days, most owners approve 90%+ without edits.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Timeline card -->
+      <div class="timeline-card">
+        <div class="timeline-header">Yesterday, while you were away from the desk…</div>
+
+        <div class="tl-item">
+          <div class="tl-time">09:14</div>
+          <div class="tl-dot-col"><div class="tl-dot done"></div><div class="tl-line"></div></div>
+          <div class="tl-content">
+            <div class="tl-title">Invoice reminder sent to Bright Events</div>
+            <div class="tl-sub">$3,200 overdue 22 days · polite tone used</div>
+            <span class="tl-badge sent">Sent automatically</span>
+          </div>
+        </div>
+
+        <div class="tl-item">
+          <div class="tl-time">11:47</div>
+          <div class="tl-dot-col"><div class="tl-dot done"></div><div class="tl-line"></div></div>
+          <div class="tl-content">
+            <div class="tl-title">Negotiated delivery discount</div>
+            <div class="tl-sub">Got 6% off Metro Linens renewal via email</div>
+            <span class="tl-badge saved">$840 saved</span>
+          </div>
+        </div>
+
+        <div class="tl-item">
+          <div class="tl-time">14:30</div>
+          <div class="tl-dot-col"><div class="tl-dot done"></div><div class="tl-line"></div></div>
+          <div class="tl-content">
+            <div class="tl-title">Rescheduled 2 bookings</div>
+            <div class="tl-sub">Client cancelled · new slot confirmed automatically</div>
+            <span class="tl-badge booked">Both confirmed</span>
+          </div>
+        </div>
+
+        <div class="tl-item">
+          <div class="tl-time">17:02</div>
+          <div class="tl-dot-col"><div class="tl-dot done"></div><div class="tl-line"></div></div>
+          <div class="tl-content">
+            <div class="tl-title">Staff timesheet anomaly flagged</div>
+            <div class="tl-sub">Diego clocked 14h on Saturday — possible error</div>
+            <span class="tl-badge" style="background:var(--accent-pale);color:var(--accent);">Flagged for review</span>
+          </div>
+        </div>
+
+        <div class="tl-item">
+          <div class="tl-time">Now</div>
+          <div class="tl-dot-col"><div class="tl-dot active"></div></div>
+          <div class="tl-content">
+            <div class="tl-title">Morning briefing ready</div>
+            <div class="tl-sub">3 items need your approval today</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── TESTIMONIALS ── -->
+<section style="background: var(--cream-dark);" id="stories">
+  <div class="section-inner">
+    <div class="section-label">Owner stories</div>
+    <div class="section-title">What happens when your<br>business <em>never sleeps</em></div>
+
+    <div class="testimonials-grid">
+      <div class="testimonial-card">
+        <p class="t-quote">I used to spend two hours every morning just triaging emails. Now I open Aria's briefing and I'm done in 12 minutes. The rest of the morning I actually cook.</p>
+        <div class="t-author">
+          <div class="t-avatar" style="background:#F7EDE0;color:#C4773B">MR</div>
+          <div>
+            <div class="t-name">Marco Rossi</div>
+            <div class="t-biz">Trattoria da Marco · Milan</div>
+          </div>
+        </div>
+      </div>
+      <div class="testimonial-card">
+        <p class="t-quote">It caught a supplier billing error I would have never noticed — $2,800 charged twice in the same month. Paid for itself in week one and never looked back.</p>
+        <div class="t-author">
+          <div class="t-avatar" style="background:#D4EAEA;color:#2E6B6B">JS</div>
+          <div>
+            <div class="t-name">Jamila Souza</div>
+            <div class="t-biz">Bloom Wellness Clinic · São Paulo</div>
+          </div>
+        </div>
+      </div>
+      <div class="testimonial-card">
+        <p class="t-quote">My clients tell me my response time has gotten incredible. What they don't know is that Aria replies to most of them within minutes — in my voice, perfectly.</p>
+        <div class="t-author">
+          <div class="t-avatar" style="background:#D8EBE0;color:#4A7A5A">RK</div>
+          <div>
+            <div class="t-name">Riya Kapoor</div>
+            <div class="t-biz">Studio RK Photography · Bangalore</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── PRICING ── -->
+<section class="pricing-section" id="pricing">
+  <div class="section-inner">
+    <div class="section-label">Simple pricing</div>
+    <div class="section-title">Less than one bad invoice.<br><em>Every month.</em></div>
+    <p class="section-body">Most owners recover Kinyl's full cost within the first week. No seat fees, no usage caps, no surprise bills.</p>
+
+    <div class="pricing-grid">
+      <div class="pricing-card">
+        <div class="pricing-tier">Starter</div>
+        <div class="pricing-price"><span>$</span>99</div>
+        <div class="pricing-cycle">per month · billed monthly</div>
+        <ul class="pricing-features">
+          <li>Daily briefings & alerts</li>
+          <li>Email & invoice monitoring</li>
+          <li>3 connected integrations</li>
+          <li>Voice summaries</li>
+          <li>30-day history</li>
+        </ul>
+        <button class="btn-tier btn-tier-outline">Get started</button>
+      </div>
+
+      <div class="pricing-card featured">
+        <div class="pricing-badge">Most popular</div>
+        <div class="pricing-tier">Professional</div>
+        <div class="pricing-price"><span>$</span>199</div>
+        <div class="pricing-cycle">per month · billed monthly</div>
+        <ul class="pricing-features">
+          <li>Everything in Starter</li>
+          <li>Automated outreach & follow-up</li>
+          <li>Unlimited integrations</li>
+          <li>Vendor negotiation assists</li>
+          <li>Staff & scheduling intelligence</li>
+          <li>12-month history & trends</li>
+        </ul>
+        <button class="btn-tier btn-tier-solid">Start free trial</button>
+      </div>
+
+      <div class="pricing-card">
+        <div class="pricing-tier">Business</div>
+        <div class="pricing-price"><span>$</span>299</div>
+        <div class="pricing-cycle">per month · billed monthly</div>
+        <ul class="pricing-features">
+          <li>Everything in Professional</li>
+          <li>Multi-location support</li>
+          <li>Team access (up to 5 users)</li>
+          <li>Custom voice persona</li>
+          <li>Priority onboarding call</li>
+          <li>Dedicated account manager</li>
+        </ul>
+        <button class="btn-tier btn-tier-outline">Contact sales</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── EARLY ACCESS ── -->
+<section class="early-access-section" id="early-access">
+  <div class="ea-inner">
+    <h2 class="ea-title">Get early access.</h2>
+    <p class="ea-sub">Be first. No credit card required.</p>
+
+    <form class="ea-form" id="earlyAccessForm">
+      <input id="ea-email" type="email" placeholder="your@email.com" autocomplete="email" required />
+      <button type="submit" class="ea-submit">Join waitlist</button>
+    </form>
+
+    <div class="ea-confirmation" id="eaConfirmation" aria-live="polite">
+      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+      You're on the list.
+    </div>
+  </div>
+</section>
+
+<!-- ── FOOTER ── -->
+</main>
+<footer>
+  <div class="footer-inner">
+    <div class="footer-top">
+      <div class="footer-brand">
+        <div class="logo">
+          <img src="logo.png" alt="Kinyl" class="logo-img logo-img-footer" />
+          <span class="logo-name">Kinyl</span>
+        </div>
+        <p class="footer-tagline">AI Chief of Staff for small business owners who have better things to do than run their inbox.</p>
+      </div>
+
+      <div>
+        <div class="footer-col-title">Product</div>
+        <ul class="footer-links">
+          <li><a href="#features">Features</a></li>
+          <li><a href="#">Integrations</a></li>
+          <li><a href="#">Pricing</a></li>
+          <li><a href="#">Changelog</a></li>
+        </ul>
+      </div>
+
+      <div>
+        <div class="footer-col-title">Company</div>
+        <ul class="footer-links">
+          <li><a href="#">About</a></li>
+          <li><a href="#">Blog</a></li>
+          <li><a href="#">Careers</a></li>
+          <li><a href="#">Press</a></li>
+        </ul>
+      </div>
+
+      <div>
+        <div class="footer-col-title">Legal</div>
+        <ul class="footer-links">
+          <li><a href="#">Privacy</a></li>
+          <li><a href="#">Terms</a></li>
+          <li><a href="#">Security</a></li>
+          <li><a href="#">Cookies</a></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      <div class="footer-copy">© 2026 Kinyl Inc.  <span></span></div>
+      <div class="footer-copy">Made with care for small business owners everywhere.</div>
+    </div>
+  </div>
+</footer>
+
+<script>
+  (function () {
+    var form = document.getElementById('earlyAccessForm');
+    var confirmation = document.getElementById('eaConfirmation');
+    if (form && confirmation) {
+      form.addEventListener('submit', function (e) {
+        e.preventDefault();
+        form.style.display = 'none';
+        confirmation.classList.add('visible');
+      });
+    }
+  })();
+</script>
+</body>
+</html>
