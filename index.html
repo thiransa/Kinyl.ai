@@ -940,6 +940,33 @@
 
   .ea-confirmation.visible { display: flex; }
 
+  /* ── HAMBURGER (hidden on desktop) ── */
+  .nav-burger {
+    display: none;
+    flex-direction: column;
+    justify-content: center;
+    gap: 5px;
+    width: 40px;
+    height: 40px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 4px;
+    z-index: 200;
+  }
+
+  .nav-burger span {
+    display: block;
+    height: 1.5px;
+    background: var(--ink);
+    border-radius: 2px;
+    transition: transform 0.25s, opacity 0.25s;
+  }
+
+  .nav-burger.open span:nth-child(1) { transform: translateY(6.5px) rotate(45deg); }
+  .nav-burger.open span:nth-child(2) { opacity: 0; }
+  .nav-burger.open span:nth-child(3) { transform: translateY(-6.5px) rotate(-45deg); }
+
   /* ── RESPONSIVE tweaks ── */
   @media (max-width: 860px) {
     .hero { grid-template-columns: 1fr; }
@@ -953,6 +980,42 @@
     .ea-form { flex-direction: column; border: none; gap: 10px; }
     .ea-form input { border: 1px solid rgba(250,248,243,0.15); border-radius: var(--radius-sm); background: rgba(250,248,243,0.06); }
     .ea-submit { border-radius: var(--radius-sm); }
+
+    header { padding: 6px 20px; }
+
+    .nav-burger { display: flex; }
+
+    #mainNav {
+      display: none;
+      position: fixed;
+      inset: 0;
+      top: 54px;
+      background: var(--cream);
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 0;
+      padding: 8px 0 24px;
+      border-top: 1px solid var(--parchment);
+      z-index: 150;
+    }
+
+    #mainNav.nav-open { display: flex; }
+
+    #mainNav a {
+      width: 100%;
+      padding: 14px 24px;
+      font-size: 15px;
+      border-bottom: 1px solid var(--parchment);
+      color: var(--ink);
+    }
+
+    #mainNav .btn-primary {
+      margin: 20px 24px 0;
+      width: calc(100% - 48px);
+      text-align: center;
+      padding: 12px 20px;
+      border-radius: var(--radius-sm);
+    }
   }
 </style>
 <link rel="icon" type="image/png" href="logo.png" />
@@ -965,13 +1028,16 @@
     <img src="logo.png" alt="Kinyl" class="logo-img" />
     <span class="logo-name">Kinyl</span>
   </div>
-  <nav>
+  <nav id="mainNav">
     <a href="#features">Features</a>
     <a href="#how-it-works">How it works</a>
     <a href="#pricing">Pricing</a>
     <a href="#stories">Stories</a>
     <a href="#early-access" class="btn-primary">Get early access</a>
   </nav>
+  <button class="nav-burger" id="navBurger" aria-label="Toggle menu" aria-expanded="false">
+    <span></span><span></span><span></span>
+  </button>
 </header>
 <main>
 
@@ -1379,6 +1445,7 @@
 
 <script>
   (function () {
+    // Early access form
     var form = document.getElementById('earlyAccessForm');
     var confirmation = document.getElementById('eaConfirmation');
     if (form && confirmation) {
@@ -1386,6 +1453,25 @@
         e.preventDefault();
         form.style.display = 'none';
         confirmation.classList.add('visible');
+      });
+    }
+
+    // Mobile nav toggle
+    var burger = document.getElementById('navBurger');
+    var nav = document.getElementById('mainNav');
+    if (burger && nav) {
+      burger.addEventListener('click', function () {
+        var open = nav.classList.toggle('nav-open');
+        burger.classList.toggle('open', open);
+        burger.setAttribute('aria-expanded', open);
+      });
+      // Close on link click
+      nav.querySelectorAll('a').forEach(function (link) {
+        link.addEventListener('click', function () {
+          nav.classList.remove('nav-open');
+          burger.classList.remove('open');
+          burger.setAttribute('aria-expanded', false);
+        });
       });
     }
   })();
